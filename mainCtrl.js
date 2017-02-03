@@ -5,33 +5,87 @@ module.exports = {
         var filteredArray;
         // console.log(req.params.privilege);
         // console.log(isNaN(req.params.privilege));
+        // var filteredArray = [];
+        // if (req.query.age) {
+        //   for (var i = 0; i < users.length; i++) {
+        //     if (users[i].age == req.query.age) {
+        //       filteredArray.push(users[i]);
+        //     }
+        //   }
+        //     // filteredArray = users.filter((value) => value.age == req.query.age);
+        // } else if (req.query.language) {
+        //   for (var i = 0; i < users.length; i++) {
+        //     if (users[i].language.toLowerCase() == req.query.language.toLowerCase()) {
+        //       filteredArray.push(users[i]);
+        //     }
+        //   }
+        //     // filteredArray = users.filter((value) => value.language == req.query.language.toLowerCase());
+        // } else if (req.query.city) {
+        //   for (var i = 0; i < users.length; i++) {
+        //     if (users[i].city.toLowerCase() == req.query.city.toLowerCase()) {
+        //       filteredArray.push(users[i]);
+        //     }
+        //   }
+        // } else if (req.query.state) {
+        //   for (var i = 0; i < users.length; i++) {
+        //     if (users[i].state.toLowerCase() == req.query.state.toLowerCase()) {
+        //       filteredArray.push(users[i]);
+        //     }
+        //   }
+        //     // filteredArray = users.filter((value) => value.state.toLowerCase() == req.query.state.toLowerCase());
+        // } else if (req.query.gender) {
+        //   for (var i = 0; i < users.length; i++) {
+        //     if (users[i].gender.toLowerCase() == req.query.gender.toLowerCase()) {
+        //       filteredArray.push(users[i]);
+        //     }
+        //   }
+        //     // filteredArray = users.filter((value) => value.gender.toLowerCase() == req.query.gender.toLowerCase());
+        // } else if (req.params.filter && isNaN(req.params.filter)) {
+        //   for (var i = 0; i < users.length; i++) {
+        //     if (users[i].type.toLowerCase() == req.params.filter.toLowerCase()) {
+        //       filteredArray.push(users[i]);
+        //     }
+        //   }
+        //     // filteredArray = users.filter((value) => value.type == req.params.filter);
+        // } else if (req.params.filter && !isNaN(req.params.filter)) {
+        //   for (var i = 0; i < users.length; i++) {
+        //     if (users[i].id == req.params.filter) {
+        //       filteredArray.push(users[i]);
+        //     }
+        //   }
+        //     // filteredArray = users.filter((value) => value.id == req.params.filter);
+        // } else {
+        //     filteredArray = users;
+        // }
+
         if (req.query.age) {
-            filteredArray = users.filter((value) => value.age === req.query.age);
+            filteredArray = users.filter((value) => value.age == req.query.age);
         } else if (req.query.language) {
-            filteredArray = users.filter((value) => value.language === req.query.language.toLowerCase());
+            filteredArray = users.filter((value) => value.language == req.query.language.toLowerCase());
         } else if (req.query.city) {
-            filteredArray = users.filter((value) => value.city.toLowerCase() === req.query.city.toLowerCase());
+            filteredArray = users.filter((value) => value.city.toLowerCase() == req.query.city.toLowerCase());
         } else if (req.query.state) {
-            filteredArray = users.filter((value) => value.state.toLowerCase() === req.query.state.toLowerCase());
+            filteredArray = users.filter((value) => value.state.toLowerCase() == req.query.state.toLowerCase());
         } else if (req.query.gender) {
-            filteredArray = users.filter((value) => value.gender.toLowerCase() === req.query.gender.toLowerCase());
+            filteredArray = users.filter((value) => value.gender.toLowerCase() == req.query.gender.toLowerCase());
         } else if (req.params.filter && isNaN(req.params.filter)) {
-            filteredArray = users.filter((value) => value.type.toLowerCase() === req.params.filter.toLowerCase());
+            filteredArray = users.filter((value) => value.type == req.params.filter);
         } else if (req.params.filter && !isNaN(req.params.filter)) {
             filteredArray = users.filter((value) => value.id == req.params.filter);
         } else {
             filteredArray = users;
         }
 
-        if (filteredArray.length > 0) {
-            res.status(200).json(filteredArray);
+        if (req.params.filter && !isNaN(req.params.filter) && filteredArray.length <= 0) {
+          res.status(404).send('User not found');
         } else {
-            res.status(404).send('User not found');
+          res.status(200).json(filteredArray);
         }
     },
     add(req, res) {
         var newId = users.slice(-1)[0].id + 1;
         var type = req.params.privilege ? req.params.privilege : req.body.type;
+        // console.log(req.body.favorites);
         let user = {
             "id": newId,
             "first_name": req.body.first_name,
@@ -43,7 +97,7 @@ module.exports = {
             "city": req.body.city,
             "state": req.body.state,
             "type": type,
-            "favorites": req.body.favorites
+            "favorites": [req.body.favorites]
         }
 
         users.push(user);
@@ -75,7 +129,7 @@ module.exports = {
     },
     delete(req, res) {
         var forum = req.query.favorite;
-        console.log('Forum to add: ');
+        // console.log('Forum to add: ');
         for (var i = 0; i < users.length; i++) {
             if (users[i].id == req.params.id) {
                 for (var j = 0; j < users[i].favorites.length; j++) {
