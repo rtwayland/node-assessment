@@ -13,8 +13,8 @@ app.get('/api/users/:filter', mainCtrl.get);
 app.post('/api/users', mainCtrl.add);
 app.post('/api/users/:privilege', mainCtrl.add);
 
-app.put('/api/users/language/:id', mainCtrl.edit);
-app.put('/api/users/forums/:id', mainCtrl.addForum);
+app.post('/api/users/language/:id', mainCtrl.edit);
+app.post('/api/users/forums/:id', mainCtrl.addForum);
 app.put('/api/users/:id', mainCtrl.editUser);
 
 app.delete('/api/users/forums/:id', mainCtrl.delete);

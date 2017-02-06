@@ -71,6 +71,7 @@ module.exports = {
         } else if (req.params.filter && isNaN(req.params.filter)) {
             filteredArray = users.filter((value) => value.type == req.params.filter);
         } else if (req.params.filter && !isNaN(req.params.filter)) {
+            console.log(req.params.filter);
             filteredArray = users.filter((value) => value.id == req.params.filter);
         } else {
             filteredArray = users;
@@ -97,7 +98,7 @@ module.exports = {
             "city": req.body.city,
             "state": req.body.state,
             "type": type,
-            "favorites": [req.body.favorites]
+            "favorites": req.body.favorites.split(', ')
         }
 
         users.push(user);
@@ -112,7 +113,7 @@ module.exports = {
                 break;
             }
         }
-
+        console.log(user);
         res.status(200).json(user);
     },
     addForum(req, res) {
@@ -122,10 +123,9 @@ module.exports = {
             if (users[i].id == req.params.id) {
                 users[i].favorites.push(forum);
                 user = users[i];
-                break;
             }
         }
-        res.status(200).json(user);
+        res.status(200).send(user);
     },
     delete(req, res) {
         var forum = req.query.favorite;
@@ -157,41 +157,8 @@ module.exports = {
         var user;
         for (var i = 0; i < users.length; i++) {
             if (users[i].id == req.params.id) {
-                for (var key in users[i]) {
-                    switch (key) {
-                        case "first_name":
-                            users[i][key] = req.body.first_name;
-                            break;
-                        case "last_name":
-                            users[i][key] = req.body.last_name;
-                            break;
-                        case "email":
-                            users[i][key] = req.body.email;
-                            break;
-                        case "gender":
-                            users[i][key] = req.body.gender;
-                            break;
-                        case "language":
-                            users[i][key] = req.body.language;
-                            break;
-                        case "age":
-                            users[i][key] = req.body.age;
-                            break;
-                        case "city":
-                            users[i][key] = req.body.city;
-                            break;
-                        case "state":
-                            users[i][key] = req.body.state;
-                            break;
-                        case "type":
-                            users[i][key] = req.body.type;
-                            break;
-                        case "favorites":
-                            users[i][key] = req.body.favorites;
-                            break;
-                        default:
-                            break;
-                    }
+                for (var key in req.body) {
+                    users[i][key] = req.body[key];
                 }
                 user = users[i];
                 break;
